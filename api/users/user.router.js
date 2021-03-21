@@ -4,14 +4,18 @@ const {
   createUser,
   addOrganizationMain,
   addOrganizationSub,
+  addOrganizationHospital,
   login,
+  checkpass,
   getUserByUserId,
   getUserByUserEmail,
   getUsers,
   updateUsers,
+  updatePassword,
   updateProfiles,
   updateOrganization_main,
   updateOrganization_sub,
+  updatedeleteUser,
   deleteUser,
   deleteOrganization,
   getOrganizations,
@@ -22,6 +26,7 @@ const {
   getUserOrganizations,
   getPermission,
   getOrganizationByID,
+  getOrganizationByName,
   getUserByPermission,
 } = require("./user.controller");
 router.get("/", checkToken, getUsers);
@@ -33,6 +38,7 @@ router.get(
 );
 router.get("/getPermission/:permission", checkToken, getPermission);
 router.get("/getOrganizationByID/:id", checkToken, getOrganizationByID);
+router.get("/getOrganizationByName/:id", checkToken, getOrganizationByName);
 router.get(
   "/getUserByPermission/:permission/:owner",
   checkToken,
@@ -53,13 +59,17 @@ router.get("/getStatus", checkToken, getStatus);
 router.post("/register", checkToken, createUser);
 router.post("/addOrganizationMain", checkToken, addOrganizationMain);
 router.post("/addOrganizationSub", checkToken, addOrganizationSub);
+router.post("/addOrganizationHospital", checkToken, addOrganizationHospital);
 router.get("/:id", checkToken, getUserByUserId);
 router.get("/getUserByUserEmail/:email", checkToken, getUserByUserEmail);
 router.post("/login", login);
+router.post("/checkpass", checkpass);
+router.patch("/updatePassword", checkToken, updatePassword);
 router.patch("/updateUsers", checkToken, updateUsers);
 router.patch("/updateProfiles", checkToken, updateProfiles);
 router.patch("/updateOrganization_main", checkToken, updateOrganization_main);
 router.patch("/updateOrganization_sub", checkToken, updateOrganization_sub);
+router.patch("/updatedeleteUser", checkToken, updatedeleteUser);
 router.delete("/deleteUser", checkToken, deleteUser);
 router.delete("/deleteOrganization", checkToken, deleteOrganization);
 

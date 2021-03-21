@@ -2,20 +2,24 @@ const {
   create,
   addOrganizationMain,
   addOrganizationSub,
+  addOrganizationHospital,
   getUserByUserEmail,
   getUserByUserId,
   getUsers,
   getOrganizations_all,
   updateUser,
+  updatePassword,
   updateProfiles,
   updateOrganization_main,
   updateOrganization_sub,
+  updatedeleteUser,
   deleteUser,
   deleteOrganization,
   getOrganizations,
   getUserOrganizations,
   getPermission,
   getOrganizationByID,
+  getOrganizationByName,
   getUserByPermission,
   getStatus,
   getOrganizationsByPermission,
@@ -75,6 +79,56 @@ module.exports = {
       });
     });
   },
+  addOrganizationHospital: (req, res) => {
+    const body = req.body;
+    addOrganizationHospital(body, (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          success: 0,
+          message: "Database connection errror",
+        });
+      }
+      return res.status(200).json({
+        success: 1,
+        data: results,
+      });
+    });
+  },
+
+  checkpass: (req, res) => {
+    const body = req.body;
+    getUserByUserEmail(body.email, (err, results) => {
+      if (err) {
+        console.log(err);
+      }
+      if (!results) {
+        return res.json({
+          success: 0,
+          data: "Invalid email or password",
+        });
+      }
+      const result = compareSync(body.password, results.password);
+      if (result) {
+        results.password = undefined;
+        const jsontoken = sign({ result: results }, "qwe1234", {
+          expiresIn: "1h",
+        });
+        return res.json({
+          success: 1,
+          message: "login successfully",
+          token: jsontoken,
+          result: results,
+        });
+      } else {
+        return res.json({
+          success: 0,
+          data: "Invalid email or password",
+        });
+      }
+    });
+  },
+
   login: (req, res) => {
     const body = req.body;
     getUserByUserEmail(body.email, (err, results) => {
@@ -188,6 +242,26 @@ module.exports = {
       });
     });
   },
+  getOrganizationByName: (req, res) => {
+    const id = req.params.id;
+    getOrganizationByName(id, (err, results) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      if (!results) {
+        return res.json({
+          success: 0,
+          message: "Record not Found",
+        });
+      }
+      results.password = undefined;
+      return res.json({
+        success: 1,
+        data: results,
+      });
+    });
+  },
   getUserByPermission: (req, res) => {
     const data = req.params;
     getUserByPermission(data, (err, results) => {
@@ -241,11 +315,25 @@ module.exports = {
       });
     });
   },
+
   updateUsers: (req, res) => {
+    const body = req.body;
+    updateUsers(body, (err, results) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      return res.json({
+        success: 1,
+        message: "updated successfully",
+      });
+    });
+  },
+  updatePassword: (req, res) => {
     const body = req.body;
     const salt = genSaltSync(10);
     body.password = hashSync(body.password, salt);
-    updateUser(body, (err, results) => {
+    updatePassword(body, (err, results) => {
       if (err) {
         console.log(err);
         return;
@@ -258,8 +346,6 @@ module.exports = {
   },
   updateProfiles: (req, res) => {
     const body = req.body;
-    const salt = genSaltSync(10);
-    body.password = hashSync(body.password, salt);
     updateProfiles(body, (err, results) => {
       if (err) {
         console.log(err);
@@ -294,6 +380,20 @@ module.exports = {
       return res.json({
         success: 1,
         message: "updated successfully",
+      });
+    });
+  },
+
+  updatedeleteUser: (req, res) => {
+    const body = req.body;
+    updatedeleteUser(body.body.id, (err, results) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      return res.json({
+        success: 1,
+        message: "Delete successfully",
       });
     });
   },
