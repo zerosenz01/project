@@ -28,9 +28,17 @@ module.exports = {
   },
   addOrganizationMain: (data, callBack) => {
     pool.query(
-      `insert into organization(name, permission, status, byid, byname) 
-                values(?,?,?,?,?)`,
-      [data.name, 5, "Supporter 2", 0, "สำนักงานควบคุมโรค"],
+      `insert into organization(name, permission, status, byid, byname,address,telephone) 
+                values(?,?,?,?,?,?,?)`,
+      [
+        data.name,
+        5,
+        "Supporter 2",
+        0,
+        "สำนักงานควบคุมโรค",
+        data.address,
+        data.telephone,
+      ],
       (error, results, fields) => {
         if (error) {
           callBack(error);
@@ -41,9 +49,17 @@ module.exports = {
   },
   addOrganizationSub: (data, callBack) => {
     pool.query(
-      `insert into organization(name, permission, status, byid, byname) 
-                values(?,?,?,?,?)`,
-      [data.name, 4, "Supporter 1", data.byid, data.byname],
+      `insert into organization(name, permission, status, byid, byname,address,telephone) 
+                values(?,?,?,?,?,?,?)`,
+      [
+        data.name,
+        4,
+        "Supporter 1",
+        data.byid,
+        data.byname,
+        data.address,
+        data.telephone,
+      ],
       (error, results, fields) => {
         if (error) {
           callBack(error);
@@ -54,9 +70,17 @@ module.exports = {
   },
   addOrganizationHospital: (data, callBack) => {
     pool.query(
-      `insert into organization(name, permission, status, byid, byname) 
-                values(?,?,?,?,?)`,
-      [data.name, 3, "Operator Foreman Superviser", data.byid, data.byname],
+      `insert into organization(name, permission, status, byid, byname,address,telephone) 
+                values(?,?,?,?,?,?,?)`,
+      [
+        data.name,
+        3,
+        "Operator Foreman Superviser",
+        data.byid,
+        data.byname,
+        data.address,
+        data.telephone,
+      ],
       (error, results, fields) => {
         if (error) {
           callBack(error);
@@ -233,8 +257,8 @@ module.exports = {
   },
   updateOrganization_main: (data, callBack) => {
     pool.query(
-      `update organization set name=? where id = ?`,
-      [data.name, data.id],
+      `update organization set name=?,address=?,telephone=? where id = ?`,
+      [data.name, data.address, data.telephone, data.id],
       (error, results, fields) => {
         if (error) {
           callBack(error);
@@ -245,8 +269,15 @@ module.exports = {
   },
   updateOrganization_sub: (data, callBack) => {
     pool.query(
-      `update organization set name=?, byname=?,byid=? where id = ?`,
-      [data.name, data.byname, data.byid, data.id],
+      `update organization set name=?, byname=?,byid=?,address=?,telephone=? where id = ?`,
+      [
+        data.name,
+        data.byname,
+        data.byid,
+        data.address,
+        data.telephone,
+        data.id,
+      ],
       (error, results, fields) => {
         if (error) {
           callBack(error);
